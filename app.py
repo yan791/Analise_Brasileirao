@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 
 st.title("Dashboard do Brasileirão")
 st.write("Análise de Times Brasileirão (2003 - 2024)")
-
-dados = pd.read_csv('brasileirao.csv')
+dados = pd.read_csv('brasileirao.csv', encoding='latin-1')
 
 opcao = st.selectbox(
     "📊 Escolha qual estatística você quer analisar:",
@@ -19,8 +18,16 @@ if opcao == "1. Maiores Campeões":
     st.bar_chart(contagem)
 
 elif opcao == "2. Times com Mais Gols":
-    totalgol = dados.groupby('team')['goals'].sum().sort_values(ascending = False)
-    st.bar_chart(totalgol.head(10))
+    st.subheader('Times com mais gols no Brasileirão')
+    gols_time = dados.groupby('team')['goals'].sum().sort_values(ascending = False)
+    
+    fig, ax = plt.subplots(figsize=(10, 4))
+    gols_time.head(10).plot(kind='bar', ax=ax)
+    plt.xlabel('')
+    plt.xticks(rotation=45)
+    plt.ylabel('Quantidade de Gols')
+    
+    st.pyplot(fig) 
 
 elif opcao == "3. Times com Mais Vitórias":
     maisvit = dados.groupby('team')['won'].sum().sort_values(ascending= False)
@@ -31,5 +38,12 @@ elif opcao == "4. Times com Mais Gols Sofridos":
     st.bar_chart(sofridos.head(10))
 
 elif opcao == "5. Media de Gols por Temporada":
-    media = dados.groupby('season')['goals'].mean().sort_values(ascending = False)
-    st.bar_chart(media.head(10))
+    st.subheader('Média de gols por temporada')
+    media = dados.groupby('season')['goals'].mean() 
+    
+    fig, ax = plt.subplots(figsize=(10, 4))
+    media.plot(kind='line', ax=ax) 
+    plt.xlabel('Ano')
+    plt.ylabel('Quantidade de Gols')
+    
+    st.pyplot(fig) 
